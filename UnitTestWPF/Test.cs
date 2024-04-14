@@ -11,6 +11,7 @@ namespace UnitTests
     {
         [TestMethod]
         public void AddUser_WithValidData_ShouldAddUser()
+
         {
             // Arrange
             var userViewModel = new UserViewModel();
