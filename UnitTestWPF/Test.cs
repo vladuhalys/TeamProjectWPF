@@ -10,6 +10,7 @@ namespace Presentation.Tests
 
         [TestInitialize]
         public void Setup()
+       
         {
             _userViewModel = new UserViewModel();
         }
