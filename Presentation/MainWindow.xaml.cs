@@ -29,6 +29,8 @@ namespace Presentation
             _userViewModel.AddUser("SampleFirstName", "SampleLastName", 30, 100);
         }
 
+       
+
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             if (studentDataGrid.SelectedItem != null)
@@ -51,5 +53,6 @@ namespace Presentation
                 _userViewModel.RemoveUser(selectedUser.Id);
             }
         }
+
     }
 }
