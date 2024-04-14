@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Core\Domain.csproj", "{4927D3AF-0497-41BB-B7AA-7EB22DDCD663}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Core\Domain.csproj", "{4927D3AF-0497-41BB-B7AA-7EB22DDCD663}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{33EE81FD-F0AE-4568-837C-7D11A2E760CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "Presentation\Presentation.csproj", "{33EE81FD-F0AE-4568-837C-7D11A2E760CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestWPF", "UnitTestWPF\UnitTestWPF.csproj", "{48CAE57B-1ADF-4FFB-8EE5-8D6467D28EB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestWPF", "UnitTestWPF\UnitTestWPF.csproj", "{48CAE57B-1ADF-4FFB-8EE5-8D6467D28EB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
