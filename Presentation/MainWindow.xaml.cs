@@ -1,15 +1,5 @@
 ﻿using Domain.UseCase;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Domain.Models;
 
 namespace Presentation
 {
@@ -36,11 +26,22 @@ namespace Presentation
             if (studentDataGrid.SelectedItem != null)
             {
                 var selectedUser = (Domain.Models.Core)studentDataGrid.SelectedItem;
-
-                int newAge = 40;
-                int newPoints = 150;
-
-                _userViewModel.EditUser(selectedUser.Id, selectedUser.FirstName, selectedUser.LastName, newAge, newPoints);
+                var dialogResult = new EditUserDialog((Domain.Models.Core)studentDataGrid.SelectedItem);
+                var save = dialogResult.ShowDialog();
+                if (save == true)
+                {
+                    var viewmodel = (EditUserVeiwModel)dialogResult.DataContext;
+                    var user = new Domain.Models.Core
+                    {
+                        Id = viewmodel.Id,
+                        FirstName = viewmodel.FirstName,
+                        LastName = viewmodel.LastName,
+                        Age = viewmodel.Age,
+                        Points = viewmodel.Points
+                    };
+                    _userViewModel.RemoveUser(selectedUser.Id);
+                    _userViewModel.AddUser("SampleFirstName", "SampleLastName", 30, 100);
+                }
             }
         }
 
