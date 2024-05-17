@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Models;
 
 namespace Domain.UseCase
 {
@@ -16,17 +14,12 @@ namespace Domain.UseCase
         public UserViewModel()
         {
             core = new Core();
-            Users = new ObservableCollection<Models.Core>(core.GetUsers());
+            RefreshData();
         }
 
         public void RefreshData()
         {
-            Users.Clear();
-            List<Models.Core> users = core.GetUsers();
-            foreach (var user in users)
-            {
-                Users.Add(user);
-            }
+            Users = new ObservableCollection<Models.Core>(core.GetUsers());
         }
 
         public void EditUser(int id, string firstName, string lastName, int age, int points)
@@ -50,51 +43,68 @@ namespace Domain.UseCase
         public void SortByPoints()
         {
             List<Models.Core> sortedUsers = Users.OrderByDescending(u => u.Points).ToList();    // (u => u.Points) - is used to sort by Points
-            Users.Clear();
-            foreach (var user in sortedUsers)
-            {
-                Users.Add(user);
-            }
+            Users = new ObservableCollection<Models.Core>(sortedUsers);
         }
 
         public void SortByAge()
         {
             List<Models.Core> sortedUsers = Users.OrderBy(u => u.Age).ToList();                  // (u => u.Age) - is used to sort by Age
-            Users.Clear();
-            foreach (var user in sortedUsers)
-            {
-                Users.Add(user);
-            }
+            Users = new ObservableCollection<Models.Core>(sortedUsers);
         }
 
         public void SortByName()
         {
             List<Models.Core> sortedUsers = Users.OrderBy(u => u.FirstName).ToList();           // (u => u.FirstName) - is used to sort by FirstName
-            Users.Clear();
-            foreach (var user in sortedUsers)
-            {
-                Users.Add(user);
-            }
+            Users = new ObservableCollection<Models.Core>(sortedUsers);
         }
     }
 
-    internal class Core
+    public class Core
     {
-        public List<Models.Core> GetUsers()
+        private List<Models.Core> users; // Поле для зберігання списку користувачів
+
+        public Core()
         {
-            return new List<Models.Core>
-        {
-            new Models.Core { Id = 1, FirstName = "John", LastName = "Doe", Age = 25, Points = 100 },
-            new Models.Core { Id = 2, FirstName = "Jane", LastName = "Doe", Age = 30, Points = 200 },
-            new Models.Core { Id = 3, FirstName = "Alice", LastName = "Smith", Age = 35, Points = 300 },
-            new Models.Core { Id = 4, FirstName = "Bob", LastName = "Smith", Age = 40, Points = 400 }
-        };
+            // Ініціалізуємо список користувачів
+            users = new List<Models.Core>
+            {
+                new Models.Core { Id = 1, FirstName = "John", LastName = "Doe", Age = 25, Points = 100 },
+                new Models.Core { Id = 2, FirstName = "Jane", LastName = "Doe", Age = 30, Points = 200 },
+                new Models.Core { Id = 3, FirstName = "Alice", LastName = "Smith", Age = 35, Points = 300 },
+                new Models.Core { Id = 4, FirstName = "Bob", LastName = "Smith", Age = 40, Points = 400 }
+            };
         }
 
-        public void EditUser(int id, string firstName, string lastName, int age, int points) { }
+        public List<Models.Core> GetUsers()
+        {
+            return users;
+        }
 
-        public void RemoveUser(int id) { }
+        public void AddUser(string firstName, string lastName, int age, int points)
+        {
+            int id = users.Count > 0 ? users.Max(u => u.Id) + 1 : 1; 
+            users.Add(new Models.Core { Id = id, FirstName = firstName, LastName = lastName, Age = age, Points = points });
+        }
 
-        public void AddUser(string firstName, string lastName, int age, int points) { }
+        public void RemoveUser(int id)
+        {
+            Models.Core userToRemove = users.FirstOrDefault(u => u.Id == id);
+            if (userToRemove != null)
+            {
+                users.Remove(userToRemove);
+            }
+        }
+
+        public void EditUser(int id, string firstName, string lastName, int age, int points)
+        {
+            Models.Core userToEdit = users.FirstOrDefault(u => u.Id == id);
+            if (userToEdit != null)
+            {
+                userToEdit.FirstName = firstName;
+                userToEdit.LastName = lastName;
+                userToEdit.Age = age;
+                userToEdit.Points = points;
+            }
+        }
     }
 }

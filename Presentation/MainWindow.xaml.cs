@@ -1,14 +1,6 @@
-﻿using Domain.UseCase;
-using System.Text;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Domain.UseCase;
 using Domain.Models;
 
 namespace Presentation
@@ -21,26 +13,28 @@ namespace Presentation
         {
             InitializeComponent();
             _userViewModel = new UserViewModel();
-            studentDataGrid.ItemsSource = _userViewModel.Users;
+            RefreshDataGrid();
+            studentDataGrid.CellEditEnding += studentDataGrid_CellEditEnding; 
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             _userViewModel.AddUser("SampleFirstName", "SampleLastName", 30, 100);
+            RefreshDataGrid();
         }
-
-       
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             if (studentDataGrid.SelectedItem != null)
             {
-                var selectedUser = (Domain.Models.Core)studentDataGrid.SelectedItem;
+                
+                Domain.Models.Core selectedUser = (Domain.Models.Core)studentDataGrid.SelectedItem;
 
-                int newAge = 40;
-                int newPoints = 150;
 
-                _userViewModel.EditUser(selectedUser.Id, selectedUser.FirstName, selectedUser.LastName, newAge, newPoints);
+            }
+            else
+            {
+                MessageBox.Show("Please select a user to edit.");
             }
         }
 
@@ -48,11 +42,70 @@ namespace Presentation
         {
             if (studentDataGrid.SelectedItem != null)
             {
-                var selectedUser = (Domain.Models.Core)studentDataGrid.SelectedItem;
-
+               
+                Domain.Models.Core selectedUser = (Domain.Models.Core)studentDataGrid.SelectedItem;
                 _userViewModel.RemoveUser(selectedUser.Id);
+                RefreshDataGrid();
+            }
+            else
+            {
+                MessageBox.Show("Please select a user to remove.");
             }
         }
 
+        private void RefreshDataGrid()
+        {
+            _userViewModel.RefreshData();
+            studentDataGrid.ItemsSource = _userViewModel.Users;
+        }
+
+        private void studentDataGrid_CellEditEnding(object sender, System.Windows.Controls.DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == System.Windows.Controls.DataGridEditAction.Commit)
+            {
+                var editedTextBox = e.EditingElement as System.Windows.Controls.TextBox;
+                if (editedTextBox != null)
+                {
+                    var newValue = editedTextBox.Text;
+                    
+                    var selectedUser = (Domain.Models.Core)e.Row.Item;
+                    
+                    if (e.Column.Header.Equals("FirstName"))
+                    {
+                        selectedUser.FirstName = newValue;
+                    }
+                    else if (e.Column.Header.Equals("LastName"))
+                    {
+                        selectedUser.LastName = newValue;
+                    }
+                    else if (e.Column.Header.Equals("Age"))
+                    {
+                        int age;
+                        if (int.TryParse(newValue, out age))
+                        {
+                            selectedUser.Age = age;
+                        }
+                        else
+                        {
+                            
+                            MessageBox.Show("Please enter a valid age.");
+                        }
+                    }
+                    else if (e.Column.Header.Equals("Points"))
+                    {
+                        int points;
+                        if (int.TryParse(newValue, out points))
+                        {
+                            selectedUser.Points = points;
+                        }
+                        else
+                        {
+                            
+                            MessageBox.Show("Please enter a valid points.");
+                        }
+                    }
+                }
+            }
+        }
     }
 }
